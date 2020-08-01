@@ -1,14 +1,15 @@
-from typing import Callable, Dict, List, Protocol
+from typing import Callable, Dict, List, Tuple
+from typing_extensions import Protocol
 
 import numpy as np
+import gym
 
 # basic multi armed bandit first
 
 
-class Bandit():
+class Bandit:
     def __init__(self, conversion_rate: float):
-        self.conversion_rate = 0
-        pass
+        self.conversion_rate = conversion_rate
 
     def action(self, multiplier: float = 1.0) -> bool:
         """Use rand to see if success based on self.conversion_rate"""
@@ -17,15 +18,21 @@ class Bandit():
         return np.random.random() < conversion_rate
 
 
-class BasicDiscreteBernoulliBandits():
+class BasicDiscreteBernoulliBandits(gym.Env):
     """N bandits, each with static success rate."""
 
     def __init__(self, bandits: List[Bandit]):
         self.bandits = bandits
 
-    def step(self, selected_bandit: int) -> bool:
+        self.action_space = gym.spaces.Discrete(len(bandits))
+        self.observation_space = gym.spaces.Discrete(1)
+
+    def step(self, selected_bandit: int) -> Tuple[bool, float, bool, dict]:
         """Use selected_bandit to do bandit.action()"""
-        return self.bandits[selected_bandit].action()
+        assert self.action_space.contains(selected_bandit)
+        observation = self.bandits[selected_bandit].action()
+        reward = float(observation)
+        return observation, reward, False, {}
 
 
 class HeirarchicalStaticBernoulliBandits():
@@ -93,6 +100,8 @@ class TimestepContextualBernoulliBandits():
         self.timestep += 1
 
         return self.bandits[selected_bandit].action(multiplier=context_multiplier)
+
+
 weekly_with_trend = TimestepContextualBernoulliBandits(
     [Bandit(0.01), Bandit(0.02)],
     [RandomWalkTrend(0.8, 1.2, 0.01), Periodicity(eg_weekly_periodicity)]

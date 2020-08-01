@@ -23,7 +23,8 @@ pycodestyle==2.6.0        # via flake8
 pydocstyle==5.0.2         # via -r requirements.dev.in
 pyflakes==2.2.0           # via flake8
 pyparsing==2.4.7          # via packaging
-pytest==5.4.3             # via -r requirements.dev.in
+pytest-mock==3.2.0        # via -r requirements.dev.in
+pytest==5.4.3             # via -r requirements.dev.in, pytest-mock
 regex==2020.7.14          # via black
 six==1.15.0               # via packaging
 snowballstemmer==2.0.0    # via pydocstyle
