@@ -35,17 +35,28 @@ class BasicDiscreteBernoulliBandits(gym.Env):
         return observation, reward, False, {}
 
 
-class HeirarchicalStaticBernoulliBandits:
+class HeirarchicalStaticBernoulliBandits(gym.Env):
     def __init__(self, bandits: List[Bandit], context: Dict[str, Dict[str, float]]):
         self.bandits = bandits
-        self.context = context
+        self.context_keys = {key: list(value.keys()) for key, value in context.items()}
+        self.context = [list(value.values()) for value in context.values()]
 
-    def step(self, selected_bandit: int, selected_context: Dict[str, str]) -> bool:
-        """Use selected_bandit to do bandit.action()"""
+        self.action_space = gym.spaces.MultiDiscrete(
+            [len(bandits)] + [len(c) for c in self.context]
+        )
+        self.observation_space = gym.spaces.Discrete(1)
+
+    def step(self, action: List[int]):
+        assert self.action_space.contains(action)
+        selected_bandit = action[0]
         context_multiplier = 1.0
-        for dimension, selected in selected_context.items():
-            context_multiplier *= self.context[dimension][selected]
-        return self.bandits[selected_bandit].action(multiplier=context_multiplier)
+        for dim_action, dimension in zip(action[1:], self.context):
+            context_multiplier *= dimension[dim_action]
+        observation = self.bandits[selected_bandit].action(
+            multiplier=context_multiplier
+        )
+        reward = float(observation)
+        return observation, reward, False, {}
 
 
 class StepperModifier(Protocol):
