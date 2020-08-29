@@ -35,7 +35,7 @@ class BasicDiscreteBernoulliBandits(gym.Env):
         return observation, reward, False, {}
 
 
-class HeirarchicalStaticBernoulliBandits():
+class HeirarchicalStaticBernoulliBandits:
     def __init__(self, bandits: List[Bandit], context: Dict[str, Dict[str, float]]):
         self.bandits = bandits
         self.context = context
@@ -60,7 +60,7 @@ def eg_weekly_periodicity(timestep: int) -> float:
     return float(weekly_periodicity[day_of_week])
 
 
-class Periodicity():
+class Periodicity:
     def __init__(self, periodicity: Callable[[int], float]):
         self.timestep = 0
         self.periodicity = periodicity
@@ -71,7 +71,7 @@ class Periodicity():
         return multiplier
 
 
-class RandomWalkTrend():
+class RandomWalkTrend:
     def __init__(self, lower: float, upper: float, step_size: float):
         self.modifier = 1.0
         self.lower = lower
@@ -87,7 +87,7 @@ class RandomWalkTrend():
         return self.modifier
 
 
-class TimestepContextualBernoulliBandits():
+class TimestepContextualBernoulliBandits:
     def __init__(self, bandits: List[Bandit], step_contexts: List[StepperModifier]):
         self.bandits = bandits
         self.step_contexts = step_contexts
@@ -104,5 +104,5 @@ class TimestepContextualBernoulliBandits():
 
 weekly_with_trend = TimestepContextualBernoulliBandits(
     [Bandit(0.01), Bandit(0.02)],
-    [RandomWalkTrend(0.8, 1.2, 0.01), Periodicity(eg_weekly_periodicity)]
+    [RandomWalkTrend(0.8, 1.2, 0.01), Periodicity(eg_weekly_periodicity)],
 )
