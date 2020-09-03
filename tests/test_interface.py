@@ -97,3 +97,20 @@ def test_heirarchical_static_bernoulli_bandits_context_keys():
         bandits=[bandit], context={"country": {"always": 1, "never": 0}}
     )
     assert env.context_keys == {"country": ["always", "never"]}
+
+
+def test_weekly_periodicity():
+    """Test weekly periodicity factory."""
+    periodicity_func = interface.weekly_periodicity([1.0] * 5 + [1.2] * 2)
+    periodicity = interface.Periodicity(periodicity_func)
+
+    assert periodicity.step() == 1.0
+    # Step forward to the weekend...
+    for _ in range(4):
+        periodicity.step()
+
+    assert periodicity.step() == 1.2
+    # And back to the week...
+    for _ in range(1):
+        periodicity.step()
+    assert periodicity.step() == 1.0

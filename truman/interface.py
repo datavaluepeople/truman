@@ -64,11 +64,20 @@ class StepperModifier(Protocol):
         ...
 
 
-def eg_weekly_periodicity(timestep: int) -> float:
-    # Weekends are slightly better for conversions
-    weekly_periodicity = [1.0] * 5 + [1.1] * 2
-    day_of_week = timestep % 7
-    return float(weekly_periodicity[day_of_week])
+def weekly_periodicity(modifiers: List[float]) -> Callable[[int], float]:
+    """A utility wrapper for creating a weekly periodicity.
+
+    This also serves as an example of how to write a periodicity function, which can be done on
+    the fly also.
+    """
+    if len(modifiers) != 7:
+        raise ValueError("There's 7 days in a week, so `modifier` must be of length 7.")
+
+    def _periodicity(timestep: int) -> float:
+        day_of_week = timestep % 7
+        return float(modifiers[day_of_week])
+
+    return _periodicity
 
 
 class Periodicity:
@@ -115,5 +124,8 @@ class TimestepContextualBernoulliBandits:
 
 weekly_with_trend = TimestepContextualBernoulliBandits(
     [Bandit(0.01), Bandit(0.02)],
-    [RandomWalkTrend(0.8, 1.2, 0.01), Periodicity(eg_weekly_periodicity)],
+    [
+        RandomWalkTrend(0.8, 1.2, 0.01),
+        Periodicity(weekly_periodicity([1.0] * 5 + [1.2] * 2)),
+    ],
 )
