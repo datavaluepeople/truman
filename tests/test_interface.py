@@ -54,9 +54,7 @@ def test_basic_discrete_bernoulli_bandit_raises_too_few_bandits():
         ([1, 1], False, 0.0),  # never bandit in never country
     ],
 )
-def test_heirarchical_static_bernoulli_bandits(
-    action, expected_observation, expected_reward
-):
+def test_heirarchical_static_bernoulli_bandits(action, expected_observation, expected_reward):
     always_bandit = interface.Bandit(conversion_rate=1)
     never_bandit = interface.Bandit(conversion_rate=0)
 
@@ -138,9 +136,7 @@ def test_timestep_contextual_bernoulli_bandit(fix_random):
     always_bandit = interface.Bandit(conversion_rate=1)
     never_bandit = interface.Bandit(conversion_rate=0)
 
-    periodicity = interface.Periodicity(
-        interface.weekly_periodicity([0, 0.1, 2, 0, 0.1, 2, 0])
-    )
+    periodicity = interface.Periodicity(interface.weekly_periodicity([0, 0.1, 2, 0, 0.1, 2, 0]))
     env = interface.TimestepContextualBernoulliBandits(
         bandits=[always_bandit, never_bandit], step_contexts=[periodicity]
     )

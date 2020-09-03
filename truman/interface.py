@@ -52,9 +52,7 @@ class HeirarchicalStaticBernoulliBandits(gym.Env):
         context_multiplier = 1.0
         for dim_action, dimension in zip(action[1:], self.context):
             context_multiplier *= dimension[dim_action]
-        observation = self.bandits[selected_bandit].action(
-            multiplier=context_multiplier
-        )
+        observation = self.bandits[selected_bandit].action(multiplier=context_multiplier)
         reward = float(observation)
         return observation, reward, False, {}
 
@@ -125,17 +123,12 @@ class TimestepContextualBernoulliBandits:
             context_multiplier *= context.step()
         self.timestep += 1
 
-        observation = self.bandits[selected_bandit].action(
-            multiplier=context_multiplier
-        )
+        observation = self.bandits[selected_bandit].action(multiplier=context_multiplier)
         reward = float(observation)
         return observation, reward, False, {}
 
 
 weekly_with_trend = TimestepContextualBernoulliBandits(
     [Bandit(0.01), Bandit(0.02)],
-    [
-        RandomWalkTrend(0.8, 1.2, 0.01),
-        Periodicity(weekly_periodicity([1.0] * 5 + [1.2] * 2)),
-    ],
+    [RandomWalkTrend(0.8, 1.2, 0.01), Periodicity(weekly_periodicity([1.0] * 5 + [1.2] * 2))],
 )
