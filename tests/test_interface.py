@@ -114,3 +114,14 @@ def test_weekly_periodicity():
     for _ in range(1):
         periodicity.step()
     assert periodicity.step() == 1.0
+
+
+def test_random_walk_trend(mocker):
+    mocker.patch("numpy.random.random", side_effect=[0.0, 0.4, 0.6, 1])
+
+    random_walk = interface.RandomWalkTrend(lower=0.0, upper=1.0, step_size=1.0)
+
+    assert random_walk.step() == 0.0
+    assert random_walk.step() == 0.0
+    assert random_walk.step() == 1.0
+    assert random_walk.step() == 1.0

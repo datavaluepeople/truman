@@ -99,9 +99,8 @@ class RandomWalkTrend:
         self.step_size = step_size
 
     def step(self) -> float:
-        direction = +1.0 if np.random.random() < 0.5 else -1.0
+        direction = -1.0 if np.random.random() < 0.5 else +1.0
         self.modifier += direction * self.step_size
-        self.modifier
         self.modifier = min(self.upper, self.modifier)
         self.modifier = max(self.lower, self.modifier)
         return self.modifier
