@@ -125,3 +125,39 @@ def test_random_walk_trend(mocker):
     assert random_walk.step() == 0.0
     assert random_walk.step() == 1.0
     assert random_walk.step() == 1.0
+
+
+def test_timestep_contextual_bernoulli_bandit_raises_too_few_bandits():
+    env = interface.TimestepContextualBernoulliBandits(bandits=[], step_contexts=[])
+
+    with pytest.raises(AssertionError):
+        env.step(1)
+
+
+def test_timestep_contextual_bernoulli_bandit(fix_random):
+    always_bandit = interface.Bandit(conversion_rate=1)
+    never_bandit = interface.Bandit(conversion_rate=0)
+
+    periodicity = interface.Periodicity(
+        interface.weekly_periodicity([0, 0.1, 2, 0, 0.1, 2, 0])
+    )
+    env = interface.TimestepContextualBernoulliBandits(
+        bandits=[always_bandit, never_bandit], step_contexts=[periodicity]
+    )
+
+    observation, reward, done, info = env.step(selected_bandit=0)
+    assert not observation
+    assert reward == 0.0
+
+    observation, reward, done, info = env.step(selected_bandit=0)
+    assert not observation
+    assert reward == 0.0
+
+    observation, reward, done, info = env.step(selected_bandit=0)
+    assert observation
+    assert reward == 1.0
+
+    for _ in range(3):
+        observation, reward, done, info = env.step(selected_bandit=1)
+        assert not observation
+        assert reward == 0.0

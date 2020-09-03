@@ -107,18 +107,29 @@ class RandomWalkTrend:
 
 
 class TimestepContextualBernoulliBandits:
+    """Bandits with contexts that are based on the timestep."""
+
     def __init__(self, bandits: List[Bandit], step_contexts: List[StepperModifier]):
         self.bandits = bandits
         self.step_contexts = step_contexts
         self.timestep = 0
 
+        self.action_space = gym.spaces.Discrete(len(bandits))
+        self.observation_space = gym.spaces.Discrete(1)
+
     def step(self, selected_bandit: int) -> bool:
+        assert self.action_space.contains(selected_bandit)
+
         context_multiplier = 1.0
         for context in self.step_contexts:
             context_multiplier *= context.step()
         self.timestep += 1
 
-        return self.bandits[selected_bandit].action(multiplier=context_multiplier)
+        observation = self.bandits[selected_bandit].action(
+            multiplier=context_multiplier
+        )
+        reward = float(observation)
+        return observation, reward, False, {}
 
 
 weekly_with_trend = TimestepContextualBernoulliBandits(
