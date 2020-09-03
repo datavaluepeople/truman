@@ -1,7 +1,8 @@
--c requirements.txt
+-r requirements.txt
 isort
 black
 flake8
 pydocstyle
 mypy
 pytest
+pytest-mock
