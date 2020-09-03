@@ -1,4 +1,4 @@
-from sellsim import interface
+from truman import interface
 
 import pytest
 
