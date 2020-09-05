@@ -52,9 +52,7 @@ class HeirarchicalStaticBernoulliBandits(gym.Env):
         context_multiplier = 1.0
         for dim_action, dimension in zip(action[1:], self.context):
             context_multiplier *= dimension[dim_action]
-        observation = self.bandits[selected_bandit].action(
-            multiplier=context_multiplier
-        )
+        observation = self.bandits[selected_bandit].action(multiplier=context_multiplier)
         reward = float(observation)
         return observation, reward, False, {}
 
@@ -64,11 +62,20 @@ class StepperModifier(Protocol):
         ...
 
 
-def eg_weekly_periodicity(timestep: int) -> float:
-    # Weekends are slightly better for conversions
-    weekly_periodicity = [1.0] * 5 + [1.1] * 2
-    day_of_week = timestep % 7
-    return float(weekly_periodicity[day_of_week])
+def weekly_periodicity(modifiers: List[float]) -> Callable[[int], float]:
+    """A utility wrapper for creating a weekly periodicity.
+
+    This also serves as an example of how to write a periodicity function, which can be done on
+    the fly also.
+    """
+    if len(modifiers) != 7:
+        raise ValueError("There's 7 days in a week, so `modifier` must be of length 7.")
+
+    def _periodicity(timestep: int) -> float:
+        day_of_week = timestep % 7
+        return float(modifiers[day_of_week])
+
+    return _periodicity
 
 
 class Periodicity:
@@ -90,30 +97,38 @@ class RandomWalkTrend:
         self.step_size = step_size
 
     def step(self) -> float:
-        direction = +1.0 if np.random.random() < 0.5 else -1.0
+        direction = -1.0 if np.random.random() < 0.5 else +1.0
         self.modifier += direction * self.step_size
-        self.modifier
         self.modifier = min(self.upper, self.modifier)
         self.modifier = max(self.lower, self.modifier)
         return self.modifier
 
 
 class TimestepContextualBernoulliBandits:
+    """Bandits with contexts that are based on the timestep."""
+
     def __init__(self, bandits: List[Bandit], step_contexts: List[StepperModifier]):
         self.bandits = bandits
         self.step_contexts = step_contexts
         self.timestep = 0
 
+        self.action_space = gym.spaces.Discrete(len(bandits))
+        self.observation_space = gym.spaces.Discrete(1)
+
     def step(self, selected_bandit: int) -> bool:
+        assert self.action_space.contains(selected_bandit)
+
         context_multiplier = 1.0
         for context in self.step_contexts:
             context_multiplier *= context.step()
         self.timestep += 1
 
-        return self.bandits[selected_bandit].action(multiplier=context_multiplier)
+        observation = self.bandits[selected_bandit].action(multiplier=context_multiplier)
+        reward = float(observation)
+        return observation, reward, False, {}
 
 
 weekly_with_trend = TimestepContextualBernoulliBandits(
     [Bandit(0.01), Bandit(0.02)],
-    [RandomWalkTrend(0.8, 1.2, 0.01), Periodicity(eg_weekly_periodicity)],
+    [RandomWalkTrend(0.8, 1.2, 0.01), Periodicity(weekly_periodicity([1.0] * 5 + [1.2] * 2))],
 )
