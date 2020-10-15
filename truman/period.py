@@ -24,11 +24,11 @@ InteractionParamsFunc = Callable[[int, int], Tuple[float, float]]
 
 class DiscreteStrategyBinomial(gym.Env):
     def __init__(
-        self, cohort_size: int, strategy_keys: List[str], interaction_params: InteractionParamsFunc,
+        self, cohort_size: int, strategy_keys: List[str], behaviour_func: InteractionParamsFunc,
     ):
         self.cohort_size = cohort_size
         self.strategies = {strategy_key: i for i, strategy_key in enumerate(strategy_keys)}
-        self.interaction_params = interaction_params
+        self.behaviour_func = behaviour_func
 
         self.action_space = gym.spaces.Discrete(len(strategy_keys))
         self.observation_space = gym.spaces.Box(low=0, high=999999, shape=(2,), dtype=np.int)
@@ -38,7 +38,7 @@ class DiscreteStrategyBinomial(gym.Env):
     def step(self, selected_strategy: int):
         assert self.action_space.contains(selected_strategy)
 
-        interaction_prb, conversion_prb = self.interaction_params(selected_strategy, self.timestep)
+        interaction_prb, conversion_prb = self.behaviour_func(selected_strategy, self.timestep)
         num_interactions = stats.binom.rvs(self.cohort_size, interaction_prb)
         num_conversions = stats.binom.rvs(num_interactions, conversion_prb)
 
