@@ -19,12 +19,12 @@ import numpy as np
 from scipy import stats
 
 
-InteractionParamsFunc = Callable[[int, int], Tuple[float, float]]
-
-
 class DiscreteStrategyBinomial(gym.Env):
     def __init__(
-        self, cohort_size: int, strategy_keys: List[str], behaviour_func: InteractionParamsFunc,
+        self,
+        cohort_size: int,
+        strategy_keys: List[str],
+        behaviour_func: Callable[[int, int], Tuple[float, float]],
     ):
         self.cohort_size = cohort_size
         self.strategies = {strategy_key: i for i, strategy_key in enumerate(strategy_keys)}
