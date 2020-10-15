@@ -38,9 +38,9 @@ class DiscreteStrategyBinomial(gym.Env):
     def step(self, selected_strategy: int):
         assert self.action_space.contains(selected_strategy)
 
-        interaction_pct, conversion_pct = self.interaction_params(selected_strategy, self.timestep)
-        num_interactions = stats.binom.rvs(self.cohort_size, interaction_pct)
-        num_conversions = stats.binom.rvs(num_interactions, conversion_pct)
+        interaction_prb, conversion_prb = self.interaction_params(selected_strategy, self.timestep)
+        num_interactions = stats.binom.rvs(self.cohort_size, interaction_prb)
+        num_conversions = stats.binom.rvs(num_interactions, conversion_prb)
 
         self.timestep += 1
 
