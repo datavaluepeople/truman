@@ -1,4 +1,4 @@
-from truman import interface
+from truman import single_interaction_step
 
 import pytest
 
@@ -9,24 +9,26 @@ def fix_random(mocker):
 
 
 def test_bandit(fix_random):
-    low_bandit = interface.Bandit(conversion_rate=0.1)
-    high_bandit = interface.Bandit(conversion_rate=0.9)
+    low_bandit = single_interaction_step.Bandit(conversion_rate=0.1)
+    high_bandit = single_interaction_step.Bandit(conversion_rate=0.9)
 
     assert not low_bandit.action()
     assert high_bandit.action()
 
 
 def test_bandit_multiplier(fix_random):
-    low_bandit = interface.Bandit(conversion_rate=0.1)
+    low_bandit = single_interaction_step.Bandit(conversion_rate=0.1)
 
     assert low_bandit.action(multiplier=6)
 
 
 def test_basic_discrete_bernoulli_bandit():
-    always_bandit = interface.Bandit(conversion_rate=1)
-    never_bandit = interface.Bandit(conversion_rate=0)
+    always_bandit = single_interaction_step.Bandit(conversion_rate=1)
+    never_bandit = single_interaction_step.Bandit(conversion_rate=0)
 
-    env = interface.BasicDiscreteBernoulliBandits(bandits=[always_bandit, never_bandit])
+    env = single_interaction_step.BasicDiscreteBernoulliBandits(
+        bandits=[always_bandit, never_bandit]
+    )
 
     for _ in range(5):
         observation, reward, done, info = env.step(selected_bandit=0)
@@ -39,7 +41,7 @@ def test_basic_discrete_bernoulli_bandit():
 
 
 def test_basic_discrete_bernoulli_bandit_raises_too_few_bandits():
-    env = interface.BasicDiscreteBernoulliBandits(bandits=[])
+    env = single_interaction_step.BasicDiscreteBernoulliBandits(bandits=[])
 
     with pytest.raises(AssertionError):
         env.step(1)
@@ -55,12 +57,12 @@ def test_basic_discrete_bernoulli_bandit_raises_too_few_bandits():
     ],
 )
 def test_heirarchical_static_bernoulli_bandits(action, expected_observation, expected_reward):
-    always_bandit = interface.Bandit(conversion_rate=1)
-    never_bandit = interface.Bandit(conversion_rate=0)
+    always_bandit = single_interaction_step.Bandit(conversion_rate=1)
+    never_bandit = single_interaction_step.Bandit(conversion_rate=0)
 
     context = {"country": {"always": 1.0, "never": 0.0}}
 
-    env = interface.HeirarchicalStaticBernoulliBandits(
+    env = single_interaction_step.HeirarchicalStaticBernoulliBandits(
         bandits=[always_bandit, never_bandit], context=context
     )
 
@@ -80,8 +82,8 @@ def test_heirarchical_static_bernoulli_bandits(action, expected_observation, exp
     ],
 )
 def test_heirarchical_static_bernoulli_bandits_raises_too_few_bandits(action):
-    bandit = interface.Bandit(conversion_rate=0)
-    env = interface.HeirarchicalStaticBernoulliBandits(
+    bandit = single_interaction_step.Bandit(conversion_rate=0)
+    env = single_interaction_step.HeirarchicalStaticBernoulliBandits(
         bandits=[bandit], context={"country": {"always": 1, "never": 0}}
     )
 
@@ -90,8 +92,8 @@ def test_heirarchical_static_bernoulli_bandits_raises_too_few_bandits(action):
 
 
 def test_heirarchical_static_bernoulli_bandits_context_keys():
-    bandit = interface.Bandit(conversion_rate=0)
-    env = interface.HeirarchicalStaticBernoulliBandits(
+    bandit = single_interaction_step.Bandit(conversion_rate=0)
+    env = single_interaction_step.HeirarchicalStaticBernoulliBandits(
         bandits=[bandit], context={"country": {"always": 1, "never": 0}}
     )
     assert env.context_keys == {"country": ["always", "never"]}
@@ -99,8 +101,8 @@ def test_heirarchical_static_bernoulli_bandits_context_keys():
 
 def test_weekly_periodicity():
     """Test weekly periodicity factory."""
-    periodicity_func = interface.weekly_periodicity([1.0] * 5 + [1.2] * 2)
-    periodicity = interface.Periodicity(periodicity_func)
+    periodicity_func = single_interaction_step.weekly_periodicity([1.0] * 5 + [1.2] * 2)
+    periodicity = single_interaction_step.Periodicity(periodicity_func)
 
     assert periodicity.step() == 1.0
     # Step forward to the weekend...
@@ -117,7 +119,7 @@ def test_weekly_periodicity():
 def test_random_walk_trend(mocker):
     mocker.patch("numpy.random.random", side_effect=[0.0, 0.4, 0.6, 1])
 
-    random_walk = interface.RandomWalkTrend(lower=0.0, upper=1.0, step_size=1.0)
+    random_walk = single_interaction_step.RandomWalkTrend(lower=0.0, upper=1.0, step_size=1.0)
 
     assert random_walk.step() == 0.0
     assert random_walk.step() == 0.0
@@ -126,18 +128,20 @@ def test_random_walk_trend(mocker):
 
 
 def test_timestep_contextual_bernoulli_bandit_raises_too_few_bandits():
-    env = interface.TimestepContextualBernoulliBandits(bandits=[], step_contexts=[])
+    env = single_interaction_step.TimestepContextualBernoulliBandits(bandits=[], step_contexts=[])
 
     with pytest.raises(AssertionError):
         env.step(1)
 
 
 def test_timestep_contextual_bernoulli_bandit(fix_random):
-    always_bandit = interface.Bandit(conversion_rate=1)
-    never_bandit = interface.Bandit(conversion_rate=0)
+    always_bandit = single_interaction_step.Bandit(conversion_rate=1)
+    never_bandit = single_interaction_step.Bandit(conversion_rate=0)
 
-    periodicity = interface.Periodicity(interface.weekly_periodicity([0, 0.1, 2, 0, 0.1, 2, 0]))
-    env = interface.TimestepContextualBernoulliBandits(
+    periodicity = single_interaction_step.Periodicity(
+        single_interaction_step.weekly_periodicity([0, 0.1, 2, 0, 0.1, 2, 0])
+    )
+    env = single_interaction_step.TimestepContextualBernoulliBandits(
         bandits=[always_bandit, never_bandit], step_contexts=[periodicity]
     )
 

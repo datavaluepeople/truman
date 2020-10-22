@@ -1,4 +1,4 @@
-from truman import period
+from truman import time_period_step
 
 
 def test_discrete_strategy_binomial():
@@ -12,7 +12,7 @@ def test_discrete_strategy_binomial():
         if strategy == 3:
             return 1.0, 1.0
 
-    env = period.DiscreteStrategyBinomial(
+    env = time_period_step.DiscreteStrategyBinomial(
         10, ["never_never", "never_always", "always_never", "always_always"], always_never_params
     )
 

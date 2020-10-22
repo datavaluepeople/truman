@@ -19,18 +19,18 @@ import numpy as np
 from scipy import stats
 
 
-InteractionParamsFunc = Callable[[int, int], Tuple[float, float]]
-
-
 class DiscreteStrategyBinomial(gym.Env):
     def __init__(
-        self, cohort_size: int, strategies: List[str], interaction_params: InteractionParamsFunc,
+        self,
+        cohort_size: int,
+        strategy_keys: List[str],
+        behaviour_func: Callable[[int, int], Tuple[float, float]],
     ):
         self.cohort_size = cohort_size
-        self.strategy_keys = {strategy: i for i, strategy in enumerate(strategies)}
-        self.interaction_params = interaction_params
+        self.strategies = {strategy_key: i for i, strategy_key in enumerate(strategy_keys)}
+        self.behaviour_func = behaviour_func
 
-        self.action_space = gym.spaces.Discrete(len(strategies))
+        self.action_space = gym.spaces.Discrete(len(strategy_keys))
         self.observation_space = gym.spaces.Box(low=0, high=999999, shape=(2,), dtype=np.int)
 
         self.timestep = 0
@@ -38,9 +38,9 @@ class DiscreteStrategyBinomial(gym.Env):
     def step(self, selected_strategy: int):
         assert self.action_space.contains(selected_strategy)
 
-        interaction_pct, conversion_pct = self.interaction_params(selected_strategy, self.timestep)
-        num_interactions = stats.binom.rvs(self.cohort_size, interaction_pct)
-        num_conversions = stats.binom.rvs(num_interactions, conversion_pct)
+        interaction_prb, conversion_prb = self.behaviour_func(selected_strategy, self.timestep)
+        num_interactions = stats.binom.rvs(self.cohort_size, interaction_prb)
+        num_conversions = stats.binom.rvs(num_interactions, conversion_prb)
 
         self.timestep += 1
 
