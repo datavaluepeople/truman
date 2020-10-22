@@ -1,6 +1,6 @@
-from truman import single_interaction_step
-
 import pytest
+
+from truman import single_interaction_step
 
 
 @pytest.fixture()
