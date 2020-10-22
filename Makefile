@@ -7,7 +7,9 @@ install:
 
 lint:
 	flake8 .
+	mypy truman
 	black --check .
+
 
 test:
 	pytest tests
