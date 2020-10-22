@@ -13,6 +13,7 @@ cohort_strat_1 = [dist1(1, t)  ]
 
 """
 from typing import Callable, List, Tuple
+from truman.typing import StepReturn
 
 import gym
 import numpy as np
@@ -35,7 +36,7 @@ class DiscreteStrategyBinomial(gym.Env):
 
         self.timestep = 0
 
-    def step(self, selected_strategy: int):
+    def step(self, selected_strategy: int) -> StepReturn:
         assert self.action_space.contains(selected_strategy)
 
         interaction_prb, conversion_prb = self.behaviour_func(selected_strategy, self.timestep)

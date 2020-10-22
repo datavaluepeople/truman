@@ -1,5 +1,6 @@
-from typing import Callable, Dict, List, Tuple
+from typing import Callable, Dict, List
 from typing_extensions import Protocol
+from truman.typing import StepReturn
 
 import numpy as np
 import gym
@@ -27,7 +28,7 @@ class BasicDiscreteBernoulliBandits(gym.Env):
         self.action_space = gym.spaces.Discrete(len(bandits))
         self.observation_space = gym.spaces.Discrete(1)
 
-    def step(self, selected_bandit: int) -> Tuple[bool, float, bool, dict]:
+    def step(self, selected_bandit: int) -> StepReturn:
         """Use selected_bandit to do bandit.action()"""
         assert self.action_space.contains(selected_bandit)
         observation = self.bandits[selected_bandit].action()
@@ -46,7 +47,7 @@ class HeirarchicalStaticBernoulliBandits(gym.Env):
         )
         self.observation_space = gym.spaces.Discrete(1)
 
-    def step(self, action: List[int]):
+    def step(self, action: List[int]) -> StepReturn:
         assert self.action_space.contains(action)
         selected_bandit = action[0]
         context_multiplier = 1.0
@@ -115,7 +116,7 @@ class TimestepContextualBernoulliBandits:
         self.action_space = gym.spaces.Discrete(len(bandits))
         self.observation_space = gym.spaces.Discrete(1)
 
-    def step(self, selected_bandit: int) -> bool:
+    def step(self, selected_bandit: int) -> StepReturn:
         assert self.action_space.contains(selected_bandit)
 
         context_multiplier = 1.0
