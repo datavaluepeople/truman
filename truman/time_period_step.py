@@ -1,7 +1,4 @@
-"""Module needs renaming as restricting and refactoring goes on.
-
-For now this contains envs which are interacting with cohorts of bandits in period blocks.
-
+"""Contains envs which are interacting with cohorts of bandits in each time period.
 
 cohort = 10k; dist1(strategy, t) for interaction; dist2(strategy, t) for conversion
 
