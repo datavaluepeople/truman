@@ -1,14 +1,4 @@
-"""Contains envs which are interacting with cohorts of bandits in each time period.
-
-cohort = 10k; dist1(strategy, t) for interaction; dist2(strategy, t) for conversion
-
-strat = {0, 1}
-
-cohort_strat_0 = [dist1(0, t) ]
-cohort_strat_1 = [dist1(1, t)  ]
-
-
-"""
+"""Contains envs which are interacting with cohorts of bandits in each time period."""
 from typing import Dict, Callable, List, Tuple
 from truman.typing import StepReturn
 
