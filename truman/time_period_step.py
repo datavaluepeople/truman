@@ -77,3 +77,25 @@ for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
             ),
         },
     )
+
+
+def non_stationary_trend_interaction(
+    strat: int, timestep: int, behaviour_params: Dict[int, Tuple[float, float]],
+) -> Tuple[float, float]:
+    modifier = 0.5 + min(timestep * 0.01, 1)
+    return tuple([x * modifier for x in behaviour_params[strat]])  # type: ignore
+
+
+for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
+    registry.register(
+        id=f"TimePeriodStep:NonStationaryTrend:conv_1:{strat_1_conv}:conv_2:{strat_2_conv}-v0",
+        entry_point="truman.time_period_step:DiscreteStrategyBinomial",
+        kwargs={
+            "cohort_size": 10000,
+            "strategy_keys": ["a", "b"],
+            "behaviour_func": functools.partial(
+                non_stationary_trend_interaction,
+                strat_behaviour={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
+            ),
+        },
+    )
