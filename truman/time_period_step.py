@@ -1,23 +1,15 @@
-"""Module needs renaming as restricting and refactoring goes on.
-
-For now this contains envs which are interacting with cohorts of bandits in period blocks.
-
-
-cohort = 10k; dist1(strategy, t) for interaction; dist2(strategy, t) for conversion
-
-strat = {0, 1}
-
-cohort_strat_0 = [dist1(0, t) ]
-cohort_strat_1 = [dist1(1, t)  ]
-
-
-"""
-from typing import Callable, List, Tuple
+"""Contains envs which are interacting with cohorts of bandits in each time period."""
+from typing import Dict, Callable, List, Tuple
 from truman.typing import StepReturn
+
+import functools
+import math
 
 import gym
 import numpy as np
 from scipy import stats
+
+from truman import registry
 
 
 class DiscreteStrategyBinomial(gym.Env):
@@ -48,3 +40,52 @@ class DiscreteStrategyBinomial(gym.Env):
         observation = (num_interactions, num_conversions)
         reward = float(num_conversions)
         return observation, reward, False, {}
+
+
+# Register specific envs
+# ----------------------------------------
+
+
+def matching_sin7_interaction(
+    strat: int, timestep: int, behaviour_params: Dict[int, Tuple[float, float]],
+) -> Tuple[float, float]:
+    day_of_week = timestep % 7
+    modifier = math.sin((day_of_week / 7) * 2 * math.pi)
+    return tuple([x * modifier for x in behaviour_params[strat]])  # type: ignore
+
+
+for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
+    registry.register(
+        id=f"TimePeriodStep:Matching_sin7:conv_1:{strat_1_conv}:conv_2:{strat_2_conv}-v0",
+        entry_point="truman.time_period_step:DiscreteStrategyBinomial",
+        kwargs={
+            "cohort_size": 10000,
+            "strategy_keys": ["a", "b"],
+            "behaviour_func": functools.partial(
+                matching_sin7_interaction,
+                strat_behaviour={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
+            ),
+        },
+    )
+
+
+def non_stationary_trend_interaction(
+    strat: int, timestep: int, behaviour_params: Dict[int, Tuple[float, float]],
+) -> Tuple[float, float]:
+    modifier = 0.5 + min(timestep * 0.01, 1)
+    return tuple([x * modifier for x in behaviour_params[strat]])  # type: ignore
+
+
+for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
+    registry.register(
+        id=f"TimePeriodStep:NonStationaryTrend:conv_1:{strat_1_conv}:conv_2:{strat_2_conv}-v0",
+        entry_point="truman.time_period_step:DiscreteStrategyBinomial",
+        kwargs={
+            "cohort_size": 10000,
+            "strategy_keys": ["a", "b"],
+            "behaviour_func": functools.partial(
+                non_stationary_trend_interaction,
+                strat_behaviour={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
+            ),
+        },
+    )
