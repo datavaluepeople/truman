@@ -54,7 +54,7 @@ def matching_sin7_interaction(
     strat: int, timestep: int, behaviour_params: Dict[int, Tuple[float, float]],
 ) -> Tuple[float, float]:
     day_of_week = timestep % 7
-    modifier = math.sin((day_of_week / 7) * 2 * math.pi)
+    modifier = math.sin((day_of_week / 7) * 2 * math.pi) + 1
     return tuple([x * modifier for x in behaviour_params[strat]])  # type: ignore
 
 
