@@ -27,6 +27,7 @@ class DiscreteStrategyBinomial(gym.Env):
         self.observation_space = gym.spaces.Box(low=0, high=999999, shape=(2,), dtype=np.int)
 
         self.timestep = 0
+        self.seed()
 
     def step(self, selected_strategy: int) -> StepReturn:
         assert self.action_space.contains(selected_strategy)
@@ -45,6 +46,9 @@ class DiscreteStrategyBinomial(gym.Env):
         self.timestep = 0
         return np.array([0, 0])
 
+    def seed(self, seed=None):
+        np.random.seed(seed)
+
 
 # Register specific envs
 # ----------------------------------------
@@ -54,7 +58,7 @@ def matching_sin7_interaction(
     strat: int, timestep: int, behaviour_params: Dict[int, Tuple[float, float]],
 ) -> Tuple[float, float]:
     day_of_week = timestep % 7
-    modifier = math.sin((day_of_week / 7) * 2 * math.pi)
+    modifier = math.sin((day_of_week / 7) * 2 * math.pi) + 1
     return tuple([x * modifier for x in behaviour_params[strat]])  # type: ignore
 
 

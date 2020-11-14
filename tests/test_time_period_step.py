@@ -28,3 +28,11 @@ def test_discrete_strategy_binomial():
     obvs, reward, done, info = env.step(3)
     assert tuple(obvs) == (10, 10)
     assert reward == 10
+
+
+def test_matching_sin7_interaction():
+    behaviour_params = {0: (0.5, 0.2), 1: (0.5, 0.3)}
+    for i in range(10):
+        modifiers = time_period_step.matching_sin7_interaction(0, i, behaviour_params)
+        assert 0 <= modifiers[0] <= 2
+        assert 0 <= modifiers[1] <= 2
