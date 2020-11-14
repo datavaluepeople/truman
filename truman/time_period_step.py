@@ -37,7 +37,7 @@ class DiscreteStrategyBinomial(gym.Env):
 
         self.timestep += 1
 
-        observation = (num_interactions, num_conversions)
+        observation = np.array([num_interactions, num_conversions])
         reward = float(num_conversions)
         return observation, reward, False, {}
 
