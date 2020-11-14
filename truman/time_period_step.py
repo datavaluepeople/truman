@@ -41,6 +41,10 @@ class DiscreteStrategyBinomial(gym.Env):
         reward = float(num_conversions)
         return observation, reward, False, {}
 
+    def reset(self):
+        self.timestep = 0
+        return np.array([0, 0])
+
 
 # Register specific envs
 # ----------------------------------------
