@@ -67,7 +67,7 @@ for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
             "strategy_keys": ["a", "b"],
             "behaviour_func": functools.partial(
                 matching_sin7_interaction,
-                strat_behaviour={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
+                behaviour_params={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
             ),
         },
     )
@@ -89,7 +89,7 @@ for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
             "strategy_keys": ["a", "b"],
             "behaviour_func": functools.partial(
                 non_stationary_trend_interaction,
-                strat_behaviour={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
+                behaviour_params={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
             ),
         },
     )
