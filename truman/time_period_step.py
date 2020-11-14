@@ -27,6 +27,7 @@ class DiscreteStrategyBinomial(gym.Env):
         self.observation_space = gym.spaces.Box(low=0, high=999999, shape=(2,), dtype=np.int)
 
         self.timestep = 0
+        self.seed()
 
     def step(self, selected_strategy: int) -> StepReturn:
         assert self.action_space.contains(selected_strategy)
@@ -44,6 +45,9 @@ class DiscreteStrategyBinomial(gym.Env):
     def reset(self):
         self.timestep = 0
         return np.array([0, 0])
+
+    def seed(self, seed=None):
+        np.random.seed(seed)
 
 
 # Register specific envs

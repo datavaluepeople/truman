@@ -32,4 +32,18 @@ def test_env(env_spec):
     for mode in env.metadata.get("render.modes", []):
         env.render(mode=mode)
 
+    # Make sure that seeding the environment leads to reproducible results
+    env_1, env_2 = env_spec.make(), env_spec.make()
+    actions = [env_1.action_space.sample() for _ in range(10)]
+    # Collect results after seeding for each environments, then check equality
+    env_1.seed(2020)
+    results_1 = [env_1.step(action) for action in actions]
+    env_2.seed(2020)
+    results_2 = [env_2.step(action) for action in actions]
+    for r_1, r_2 in zip(results_1, results_2):
+        observation_1, reward_1, done_1, info_1 = r_1
+        observation_2, reward_2, done_2, info_2 = r_2
+        assert (observation_1 == observation_2).all()
+        assert (reward_1, done_1, info_1) == (reward_2, done_2, info_2)
+
     env.close()
