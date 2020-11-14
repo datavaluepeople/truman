@@ -17,14 +17,14 @@ def test_discrete_strategy_binomial():
     )
 
     obvs, reward, done, info = env.step(0)
-    assert obvs == (0, 0)
+    assert tuple(obvs) == (0, 0)
     assert reward == 0
     obvs, reward, done, info = env.step(1)
-    assert obvs == (0, 0)
+    assert tuple(obvs) == (0, 0)
     assert reward == 0
     obvs, reward, done, info = env.step(2)
-    assert obvs == (10, 0)
+    assert tuple(obvs) == (10, 0)
     assert reward == 0
     obvs, reward, done, info = env.step(3)
-    assert obvs == (10, 10)
+    assert tuple(obvs) == (10, 10)
     assert reward == 10

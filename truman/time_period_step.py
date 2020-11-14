@@ -37,9 +37,13 @@ class DiscreteStrategyBinomial(gym.Env):
 
         self.timestep += 1
 
-        observation = (num_interactions, num_conversions)
+        observation = np.array([num_interactions, num_conversions])
         reward = float(num_conversions)
         return observation, reward, False, {}
+
+    def reset(self):
+        self.timestep = 0
+        return np.array([0, 0])
 
 
 # Register specific envs
@@ -63,7 +67,7 @@ for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
             "strategy_keys": ["a", "b"],
             "behaviour_func": functools.partial(
                 matching_sin7_interaction,
-                strat_behaviour={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
+                behaviour_params={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
             ),
         },
     )
@@ -85,7 +89,7 @@ for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
             "strategy_keys": ["a", "b"],
             "behaviour_func": functools.partial(
                 non_stationary_trend_interaction,
-                strat_behaviour={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
+                behaviour_params={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
             ),
         },
     )
