@@ -19,15 +19,23 @@ def test_discrete_strategy_binomial():
     obvs, reward, done, info = env.step(0)
     assert tuple(obvs) == (0, 0)
     assert reward == 0
+    assert info["interaction_prb"] == 0.0
+    assert info["conversion_prb"] == 0.0
     obvs, reward, done, info = env.step(1)
     assert tuple(obvs) == (0, 0)
     assert reward == 0
+    assert info["interaction_prb"] == 0.0
+    assert info["conversion_prb"] == 1.0
     obvs, reward, done, info = env.step(2)
     assert tuple(obvs) == (10, 0)
     assert reward == 0
+    assert info["interaction_prb"] == 1.0
+    assert info["conversion_prb"] == 0.0
     obvs, reward, done, info = env.step(3)
     assert tuple(obvs) == (10, 10)
     assert reward == 10
+    assert info["interaction_prb"] == 1.0
+    assert info["conversion_prb"] == 1.0
 
 
 def test_matching_sin7_interaction():
