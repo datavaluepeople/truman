@@ -40,7 +40,12 @@ class DiscreteStrategyBinomial(gym.Env):
 
         observation = np.array([num_interactions, num_conversions])
         reward = float(num_conversions)
-        return observation, reward, False, {}
+        return (
+            observation,
+            reward,
+            False,
+            {"interaction_prb": interaction_prb, "conversion_prb": conversion_prb},
+        )
 
     def reset(self):
         self.timestep = 0
