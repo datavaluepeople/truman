@@ -1,6 +1,7 @@
 """Interfacing with env histories."""
-
 import pandas as pd
+
+from truman import plot
 
 
 class History:
@@ -34,3 +35,8 @@ class History:
         for i, info_name in enumerate(self.infos[1].keys()):  # info is None on step 0
             df[info_name] = [i[info_name] if i is not None else None for i in self.infos]
         return df
+
+    def plot(
+        self, alpha=0.7, use_cols="all", ax=None,
+    ):
+        plot.plot(self, alpha=alpha, use_cols=use_cols, ax=ax)
