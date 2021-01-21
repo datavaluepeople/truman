@@ -1,4 +1,8 @@
 """Interfacing with env histories."""
+
+import pandas as pd
+
+
 class History:
     def __init__(self):
         self.actions = []
@@ -19,3 +23,14 @@ class History:
 
     def all(self):
         return (*self.observable(), self.infos)
+
+    def to_df(self):
+        df = pd.DataFrame()
+        df["action"] = self.actions
+        for i in range(len(self.observations[0])):
+            df[f"observation_{i}"] = [o[i] for o in self.observations]
+        df["reward"] = self.rewards
+        df["done"] = self.dones
+        for i, info_name in enumerate(self.infos[1].keys()):  # info is None on step 0
+            df[info_name] = [i[info_name] if i is not None else None for i in self.infos]
+        return df
