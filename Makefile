@@ -5,6 +5,9 @@ all: lint test
 install:
 	pip install -r requirements.dev.txt  -e .
 
+compile:
+	pip-compile requirements.in; pip-compile requirements.dev.in
+
 lint:
 	flake8 .
 	mypy truman
