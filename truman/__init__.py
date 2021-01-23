@@ -1,3 +1,5 @@
+from truman import history  # noqa
+
 from gym.envs import registration
 
 # Global registry
