@@ -1,5 +1,6 @@
 """Contains envs which are interacting with cohorts of bandits in each time period."""
 from typing import Dict, Callable, List, Tuple
+from typing_extensions import Protocol
 from truman.typing import StepReturn
 
 import functools
@@ -53,6 +54,22 @@ class DiscreteStrategyBinomial(gym.Env):
 
     def seed(self, seed=None):
         np.random.seed(seed)
+
+
+class DiscreteStrategyBinomialAgent(Protocol):
+    """Protocol that agents applied to this class of envs should conform to."""
+
+    def act(self, previous_observation: np.array) -> Tuple[int, dict]:
+        """Choose an action given the previous observation.
+
+        Args:
+            previous_observation: numpy array of length 2 representing
+                [n_interactions, n_conversions]
+
+        Returns:
+            tuple of (integer index of the chosen action, dict of any extra information)
+        """
+        pass
 
 
 # Register specific envs
