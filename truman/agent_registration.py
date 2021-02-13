@@ -68,3 +68,6 @@ class AgentSpec:
         agent = factory(env, **_kwargs)
 
         return agent
+
+    def __repr__(self):
+        return "AgentSpec({})".format(self.id)
