@@ -8,6 +8,8 @@ from typing import Optional
 import re
 import importlib
 
+from gym import Env
+
 # This format is true today, but it's *not* an official spec.
 # [username/](agent-name)-v(version)    agent-name is group 1, version is group 2
 agent_id_re = re.compile(r"^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$")
@@ -52,3 +54,17 @@ class AgentSpec:
                 f"(Currently all IDs must be of the form {agent_id_re.pattern}.)"
             )
         self._agent_name = match.group(1)
+
+    def make(self, env: Optional[Env] = None, **kwargs):
+        """Instantiates an instance of the agent compatible with given env."""
+        if self.entry_point is None:
+            raise ValueError(
+                f"Attempting to make deprecated agent {self.id}. "
+                "(HINT: is there a newer registered version of this agent?)"
+            )
+        _kwargs = self._kwargs.copy()
+        _kwargs.update(kwargs)
+        factory = load(self.entry_point)
+        agent = factory(env, **_kwargs)
+
+        return agent
