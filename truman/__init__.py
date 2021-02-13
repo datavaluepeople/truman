@@ -1,4 +1,5 @@
 from truman import history  # noqa
+from truman.run.interface import run  # noqa
 
 from gym.envs import registration
 

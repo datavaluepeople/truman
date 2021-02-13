@@ -15,8 +15,11 @@ numpy==1.19.1
     #   -r requirements.in
     #   gym
     #   pandas
+    #   pyarrow
     #   scipy
 pandas==1.2.1
+    # via -r requirements.in
+pyarrow==3.0.0
     # via -r requirements.in
 pyglet==1.5.0
     # via gym
