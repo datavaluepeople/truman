@@ -7,7 +7,7 @@ import logging
 if TYPE_CHECKING:
     from truman import history
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 try:
     import matplotlib.pyplot as plt
