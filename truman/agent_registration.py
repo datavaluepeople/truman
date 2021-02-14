@@ -7,8 +7,14 @@ from typing import Optional
 
 import re
 import importlib
+import logging
 
 from gym import Env
+
+from truman.typing import Agent
+
+
+logger = logging.getLogger(__name__)
 
 # This format is true today, but it's *not* an official spec.
 # [username/](agent-name)-v(version)    agent-name is group 1, version is group 2
@@ -40,7 +46,7 @@ class AgentSpec:
         id: str,
         entry_point: Optional[str] = None,
         nondeterministic: bool = False,
-        kwargs: dict = None,
+        kwargs: Optional[dict] = None,
     ):
         self.id = id
         self.entry_point = entry_point
@@ -55,7 +61,7 @@ class AgentSpec:
             )
         self._agent_name = match.group(1)
 
-    def make(self, env: Optional[Env] = None, **kwargs):
+    def make(self, env: Optional[Env] = None, **kwargs) -> Agent:
         """Instantiates an instance of the agent compatible with given env."""
         if self.entry_point is None:
             raise ValueError(
@@ -71,3 +77,48 @@ class AgentSpec:
 
     def __repr__(self):
         return "AgentSpec({})".format(self.id)
+
+
+class AgentRegistry:
+    """Register an agent by ID.
+
+    IDs should remain stable over time and should be guaranteed to resolve to the same agent
+    dynamics (or be desupported). The goal is that results of a particular agent should always be
+    comparable, and not depend on the version of the code that was running.
+    """
+
+    def __init__(self):
+        self.agent_specs = {}
+
+    def make(self, id: str, env: Optional[Env] = None, **kwargs) -> Agent:
+        """Instantiate an instance of an agent of the given id compatible with the given env."""
+        logging.info(f"Making new agent: {id} ({kwargs})")
+        try:
+            return self.agent_specs[id].make(env, **kwargs)
+        except KeyError:
+            raise KeyError(f"No registered agent with id {id}")
+
+    def all(self):
+        """Return all the agents in the registry."""
+        return self.agent_specs.values()
+
+    def register(
+        self,
+        id: str,
+        entry_point: Optional[str] = None,
+        nondeterministic: bool = False,
+        kwargs: Optional[dict] = None,
+    ):
+        """Register an agent.
+
+        Args:
+            id (str): The official agent ID
+            entry_point (Optional[str]): The Python entrypoint of the agent class
+                (e.g.module.name:factory_func, or module.name:Class)
+            nondeterministic (bool): Whether this environment is non-deterministic even after
+                seeding
+            kwargs (dict): The kwargs to pass to the agent class
+        """
+        if id in self.agent_specs:
+            raise ValueError(f"Cannot re-register id {id}")
+        self.agent_specs[id] = AgentSpec(id, entry_point, nondeterministic, kwargs)
