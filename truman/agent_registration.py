@@ -45,6 +45,8 @@ class AgentSpec:
         id (str): The official agent ID
         entry_point (Optional[str]): The Python entrypoint of the agent class
             (e.g.module.name:factory_func, or module.name:Class)
+            Should be set to `None` to denote that the agent is now defunct, replaced by a newer
+            version.
         nondeterministic (bool): Whether this environment is non-deterministic even after seeding
         kwargs (dict): The kwargs to pass to the agent class
     """
@@ -123,6 +125,8 @@ class AgentRegistry:
             id (str): The official agent ID
             entry_point (Optional[str]): The Python entrypoint of the agent class
                 (e.g.module.name:factory_func, or module.name:Class)
+                Should be set to `None` to denote that the agent is now defunct, replaced by a
+                newer version.
             nondeterministic (bool): Whether this environment is non-deterministic even after
                 seeding
             kwargs (dict): The kwargs to pass to the agent class
