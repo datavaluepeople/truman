@@ -50,7 +50,7 @@ class AgentSpec:
             (e.g.module.name:factory_func, or module.name:Class)
             Should be set to `None` to denote that the agent is now defunct, replaced by a newer
             version.
-        nondeterministic: Whether this environment is non-deterministic even after seeding
+        nondeterministic: Whether this agent is non-deterministic even after seeding
         kwargs: The kwargs to pass to the agent class
     """
 
@@ -132,8 +132,7 @@ class AgentRegistry:
                 (e.g.module.name:factory_func, or module.name:Class)
                 Should be set to `None` to denote that the agent is now defunct, replaced by a
                 newer version.
-            nondeterministic: Whether this environment is non-deterministic even after
-                seeding
+            nondeterministic: Whether this agent is non-deterministic even after seeding
             kwargs: The kwargs to pass to the agent class
         """
         if id in self.agent_specs:
