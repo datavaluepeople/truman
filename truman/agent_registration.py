@@ -18,8 +18,9 @@ from truman.typing import Agent
 
 logger = logging.getLogger(__name__)
 
-# This format is true today, but it's *not* an official spec.
-# [username/](agent-name)-v(version)    agent-name is group 1, version is group 2
+# A unique ID for an agent; a name followed by a version number.
+# Agent-name is group 1, version is group 2.
+# [username/](agent-name)-v(version)
 agent_id_re = re.compile(r"^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$")
 
 
@@ -39,10 +40,12 @@ def _load(name: str):
 class AgentSpec:
     """A specification for a particular instance of an agent.
 
-    Used to register agent and parameters full specification for official evaluations.
+    Used to register agent and parameters full specification for evaluations.
 
     Args:
-        id: The official agent ID
+        id: A unique agent ID
+            Required format; [username/](agent-name)-v(version)
+            [username/] is optional.
         entry_point: The Python entrypoint of the agent class
             (e.g.module.name:factory_func, or module.name:Class)
             Should be set to `None` to denote that the agent is now defunct, replaced by a newer
@@ -122,7 +125,9 @@ class AgentRegistry:
         """Register an agent.
 
         Args:
-            id: The official agent ID
+            id: A unique agent ID
+                Required format; [username/](agent-name)-v(version)
+                [username/] is optional.
             entry_point: The Python entrypoint of the agent class
                 (e.g.module.name:factory_func, or module.name:Class)
                 Should be set to `None` to denote that the agent is now defunct, replaced by a
