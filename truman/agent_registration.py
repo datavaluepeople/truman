@@ -1,7 +1,9 @@
 """Registration of agents.
 
-Could be eventually be split out into a stand-alone package to use for registering and managing
-agents.
+Enables registering specifications of agents and parameters combinations, under a unique ID,
+which can be passed to Truman's run interface.
+
+Based on: https://github.com/openai/gym/blob/master/gym/envs/registration.py
 """
 from typing import Optional
 
