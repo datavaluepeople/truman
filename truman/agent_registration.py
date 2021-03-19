@@ -21,7 +21,13 @@ logger = logging.getLogger(__name__)
 agent_id_re = re.compile(r"^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$")
 
 
-def load(name):
+def _load(name: str):
+    """Load a python object from string.
+
+    Args:
+        name (str): of the form `path.to.module:object`
+    """
+
     mod_name, attr_name = name.split(":")
     mod = importlib.import_module(mod_name)
     fn = getattr(mod, attr_name)
@@ -70,7 +76,7 @@ class AgentSpec:
             )
         _kwargs = self._kwargs.copy()
         _kwargs.update(kwargs)
-        factory = load(self.entry_point)
+        factory = _load(self.entry_point)
         agent = factory(env, **_kwargs)
 
         return agent
