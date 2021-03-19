@@ -5,7 +5,7 @@ which can be passed to Truman's run interface.
 
 Based on: https://github.com/openai/gym/blob/master/gym/envs/registration.py
 """
-from typing import Optional
+from typing import Callable, Union, Optional
 
 import re
 import importlib
@@ -46,8 +46,10 @@ class AgentSpec:
         id: A unique agent ID
             Required format; [username/](agent-name)-v(version)
             [username/] is optional.
-        entry_point: The Python entrypoint of the agent class
-            (e.g.module.name:factory_func, or module.name:Class)
+        entry_point: The Python entrypoint of the agent class. Should be one of:
+            - the string path to the python object (e.g.module.name:factory_func, or
+              module.name:Class)
+            - the python object (class or factory) itself
             Should be set to `None` to denote that the agent is now defunct, replaced by a newer
             version.
         nondeterministic: Whether this agent is non-deterministic even after seeding
@@ -57,7 +59,7 @@ class AgentSpec:
     def __init__(
         self,
         id: str,
-        entry_point: Optional[str] = None,
+        entry_point: Optional[Union[Callable, str]] = None,
         nondeterministic: bool = False,
         kwargs: Optional[dict] = None,
     ):
@@ -83,7 +85,10 @@ class AgentSpec:
             )
         _kwargs = self._kwargs.copy()
         _kwargs.update(kwargs)
-        factory = _load(self.entry_point)
+        if callable(self.entry_point):
+            factory = self.entry_point
+        else:
+            factory = _load(self.entry_point)
         agent = factory(env, **_kwargs)
 
         return agent
@@ -118,7 +123,7 @@ class AgentRegistry:
     def register(
         self,
         id: str,
-        entry_point: Optional[str] = None,
+        entry_point: Optional[Union[Callable, str]] = None,
         nondeterministic: bool = False,
         kwargs: Optional[dict] = None,
     ):
@@ -128,8 +133,10 @@ class AgentRegistry:
             id: A unique agent ID
                 Required format; [username/](agent-name)-v(version)
                 [username/] is optional.
-            entry_point: The Python entrypoint of the agent class
-                (e.g.module.name:factory_func, or module.name:Class)
+            entry_point: The Python entrypoint of the agent class. Should be one of:
+                - the string path to the python object (e.g.module.name:factory_func, or
+                  module.name:Class)
+                - the python object (class or factory) itself
                 Should be set to `None` to denote that the agent is now defunct, replaced by a
                 newer version.
             nondeterministic: Whether this agent is non-deterministic even after seeding
