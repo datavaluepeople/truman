@@ -27,7 +27,7 @@ def _load(name: str):
     """Load a python object from string.
 
     Args:
-        name (str): of the form `path.to.module:object`
+        name: of the form `path.to.module:object`
     """
 
     mod_name, attr_name = name.split(":")
@@ -42,13 +42,13 @@ class AgentSpec:
     Used to register agent and parameters full specification for official evaluations.
 
     Args:
-        id (str): The official agent ID
-        entry_point (Optional[str]): The Python entrypoint of the agent class
+        id: The official agent ID
+        entry_point: The Python entrypoint of the agent class
             (e.g.module.name:factory_func, or module.name:Class)
             Should be set to `None` to denote that the agent is now defunct, replaced by a newer
             version.
-        nondeterministic (bool): Whether this environment is non-deterministic even after seeding
-        kwargs (dict): The kwargs to pass to the agent class
+        nondeterministic: Whether this environment is non-deterministic even after seeding
+        kwargs: The kwargs to pass to the agent class
     """
 
     def __init__(
@@ -122,14 +122,14 @@ class AgentRegistry:
         """Register an agent.
 
         Args:
-            id (str): The official agent ID
-            entry_point (Optional[str]): The Python entrypoint of the agent class
+            id: The official agent ID
+            entry_point: The Python entrypoint of the agent class
                 (e.g.module.name:factory_func, or module.name:Class)
                 Should be set to `None` to denote that the agent is now defunct, replaced by a
                 newer version.
-            nondeterministic (bool): Whether this environment is non-deterministic even after
+            nondeterministic: Whether this environment is non-deterministic even after
                 seeding
-            kwargs (dict): The kwargs to pass to the agent class
+            kwargs: The kwargs to pass to the agent class
         """
         if id in self.agent_specs:
             raise ValueError(f"Cannot re-register id {id}")
