@@ -100,8 +100,7 @@ class AgentRegistry:
     """Register an agent by ID.
 
     IDs should remain stable over time and should be guaranteed to resolve to the same agent
-    dynamics (or be desupported). The goal is that results of a particular agent should always be
-    comparable, and not depend on the version of the code that was running.
+    dynamics (or be desupported).
     """
 
     def __init__(self):
