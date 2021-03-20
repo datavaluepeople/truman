@@ -53,7 +53,7 @@ class AgentSpec:
             Should be set to `None` to denote that the agent is now defunct, replaced by a newer
             version.
         nondeterministic: Whether this agent is non-deterministic even after seeding
-        kwargs: The kwargs to pass to the agent class
+        kwargs: The kwargs to pass to the agent entry point when instantiating the agent
     """
 
     def __init__(
@@ -139,7 +139,7 @@ class AgentRegistry:
                 Should be set to `None` to denote that the agent is now defunct, replaced by a
                 newer version.
             nondeterministic: Whether this agent is non-deterministic even after seeding
-            kwargs: The kwargs to pass to the agent class
+            kwargs: The kwargs to pass to the agent entry point when instantiating the agent
         """
         if id in self.agent_specs:
             raise ValueError(f"Cannot re-register id {id}")
