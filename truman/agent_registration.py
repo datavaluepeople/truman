@@ -107,12 +107,12 @@ class AgentRegistry:
         self.agent_specs = {}
 
     def make(self, id: str, env: Optional[Env] = None, **kwargs) -> Agent:
-        """Instantiate an instance of an agent of the given id compatible with the given env."""
+        """Instantiate an instance of an agent of the given ID compatible with the given env."""
         logging.info(f"Making new agent: {id} ({kwargs})")
         try:
             return self.agent_specs[id].make(env, **kwargs)
         except KeyError:
-            raise KeyError(f"No registered agent with id {id}")
+            raise KeyError(f"No registered agent with ID {id}")
 
     def all(self):
         """Return all the agents in the registry."""
@@ -141,5 +141,5 @@ class AgentRegistry:
             kwargs: The kwargs to pass to the agent entry point when instantiating the agent
         """
         if id in self.agent_specs:
-            raise ValueError(f"Cannot re-register id {id}")
+            raise ValueError(f"Cannot re-register ID {id}")
         self.agent_specs[id] = AgentSpec(id, entry_point, nondeterministic, kwargs)

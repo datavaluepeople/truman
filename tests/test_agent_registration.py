@@ -51,14 +51,14 @@ def test_register_duplicate_id():
     registry = agent_registration.AgentRegistry()
 
     registry.register("Agent-v0")
-    with pytest.raises(ValueError, match=r"Cannot re-register id"):
+    with pytest.raises(ValueError, match=r"Cannot re-register ID"):
         registry.register("Agent-v0")
 
 
 def test_make_missing_agent():
     registry = agent_registration.AgentRegistry()
 
-    with pytest.raises(KeyError, match=r"No registered agent with id"):
+    with pytest.raises(KeyError, match=r"No registered agent with ID"):
         registry.make("Agent-v0")
 
 
