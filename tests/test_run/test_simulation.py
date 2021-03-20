@@ -23,18 +23,13 @@ class FakeAgent:
 
 
 @pytest.mark.parametrize("num_steps", [5, 2])
-def test_run(num_steps):
+def test_run(num_steps, mocker):
+    mocker.patch.object(simulation.time, "time", side_effect=[1, 3])
+
     env = FakeEnv(num_steps)
     agent = FakeAgent()
 
     history, elapsed = simulation.run(agent=agent, env=env, run_params={"max_iters": 100})
 
-    assert elapsed > 0
+    assert elapsed == 2
     assert len(history) == num_steps + 1
-
-
-def test_timer(mocker):
-    mocker.patch.object(simulation.time, "time", side_effect=[1, 3])
-    with simulation.Timer() as t:
-        pass
-    assert t.elapsed == 2

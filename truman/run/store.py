@@ -4,7 +4,7 @@ import os.path
 import pandas as pd
 
 
-def summarise(history: pd.DataFrame, elapsed_time: int, env_id: str, run_params: dict) -> dict:
+def summarise(history: pd.DataFrame, elapsed_time: float, env_id: str, run_params: dict) -> dict:
     """Summarise the history into a single row."""
     return {
         "avg_reward": history["reward"].mean(),
