@@ -14,12 +14,14 @@ upgrade:
 lint:
 	flake8 .
 	pydocstyle truman
-	mypy truman
+	isort --check-only .
 	black --check .
+	mypy truman
 
 
 test:
 	pytest tests
 
 format:
+	isort .
 	black .
