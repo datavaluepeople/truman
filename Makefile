@@ -10,6 +10,7 @@ compile:
 
 lint:
 	flake8 .
+	pydocstyle truman
 	mypy truman
 	black --check .
 
