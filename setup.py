@@ -1,5 +1,6 @@
 from setuptools import find_packages, setup
 
+
 setup(
     name="truman",
     packages=find_packages(),

@@ -8,14 +8,20 @@ install:
 compile:
 	pip-compile requirements.in; pip-compile requirements.dev.in
 
+upgrade:
+	pip-compile --upgrade requirements.in; pip-compile --upgrade requirements.dev.in
+
 lint:
 	flake8 .
-	mypy truman
+	pydocstyle truman
+	isort --check-only .
 	black --check .
+	mypy truman
 
 
 test:
 	pytest tests
 
 format:
+	isort .
 	black .

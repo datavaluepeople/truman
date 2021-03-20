@@ -53,7 +53,10 @@ class History:
         return df
 
     def plot(
-        self, alpha=0.7, use_cols="all", ax=None,
+        self,
+        alpha=0.7,
+        use_cols="all",
+        ax=None,
     ):
         """Plot history."""
         plot.plot(self, alpha=alpha, use_cols=use_cols, ax=ax)

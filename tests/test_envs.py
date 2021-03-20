@@ -2,8 +2,8 @@
 
 Taken from: https://github.com/openai/gym/blob/master/gym/envs/tests/test_envs.py
 """
-import pytest
 import numpy as np
+import pytest
 
 import truman
 
