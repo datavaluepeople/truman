@@ -33,6 +33,8 @@ def run(agent: Agent, env: Env, run_params: dict) -> Tuple[pd.DataFrame, int]:
 
 
 class Timer:
+    """Timer utility."""
+
     def __enter__(self):
         self.start = time.time()
         return self

@@ -1,3 +1,5 @@
+"""Init and create global env registry."""
+
 from truman import history  # noqa
 from truman.run.interface import run  # noqa
 
