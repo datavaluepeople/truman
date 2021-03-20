@@ -74,7 +74,6 @@ class AgentSpec:
                 f"Attempted to register malformed agent ID: {id}. "
                 f"(Currently all IDs must be of the form {agent_id_re.pattern}.)"
             )
-        self._agent_name = match.group(1)
 
     def make(self, env: Optional[Env] = None, **kwargs) -> Agent:
         """Instantiates an instance of the agent compatible with given env."""
