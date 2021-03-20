@@ -46,7 +46,7 @@ class AgentSpec:
         id: A unique agent ID
             Required format; [username/](agent-name)-v(version)
             [username/] is optional.
-        entry_point: The Python entrypoint of the agent class. Should be one of:
+        entry_point: The python entrypoint of the agent class. Should be one of:
             - the string path to the python object (e.g.module.name:factory_func, or
               module.name:Class)
             - the python object (class or factory) itself
@@ -131,7 +131,7 @@ class AgentRegistry:
             id: A unique agent ID
                 Required format; [username/](agent-name)-v(version)
                 [username/] is optional.
-            entry_point: The Python entrypoint of the agent class. Should be one of:
+            entry_point: The python entrypoint of the agent class. Should be one of:
                 - the string path to the python object (e.g.module.name:factory_func, or
                   module.name:Class)
                 - the python object (class or factory) itself
