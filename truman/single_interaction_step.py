@@ -4,8 +4,8 @@ from typing import Callable, Dict, List
 from typing_extensions import Protocol
 from truman.typing import StepReturn
 
-import numpy as np
 import gym
+import numpy as np
 
 
 class Bandit:

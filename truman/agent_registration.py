@@ -5,15 +5,14 @@ which can be passed to Truman's run interface.
 
 Based on: https://github.com/openai/gym/blob/master/gym/envs/registration.py
 """
-from typing import Callable, Union, Optional
+from typing import Callable, Optional, Union
+from truman.typing import Agent
 
-import re
 import importlib
 import logging
+import re
 
 from gym import Env
-
-from truman.typing import Agent
 
 
 logger = logging.getLogger(__name__)
@@ -30,7 +29,6 @@ def _load(name: str):
     Args:
         name: of the form `path.to.module:object`
     """
-
     mod_name, attr_name = name.split(":")
     mod = importlib.import_module(mod_name)
     fn = getattr(mod, attr_name)

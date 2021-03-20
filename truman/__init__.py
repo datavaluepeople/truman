@@ -1,9 +1,10 @@
 """Init and create global env registry."""
 
+from gym.envs import registration
+
 from truman import history  # noqa
 from truman.run.interface import run  # noqa
 
-from gym.envs import registration
 
 # Global registry
 registry = registration.EnvRegistry()

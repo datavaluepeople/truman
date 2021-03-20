@@ -1,6 +1,6 @@
 """Contains envs which are interacting with cohorts of bandits in each time period."""
 
-from typing import Dict, Callable, List, Tuple
+from typing import Callable, Dict, List, Tuple
 from typing_extensions import Protocol
 from truman.typing import StepReturn
 
@@ -28,7 +28,7 @@ class DiscreteStrategyBinomial(gym.Env):
         self.behaviour_func = behaviour_func
 
         self.action_space = gym.spaces.Discrete(len(strategy_keys))
-        self.observation_space = gym.spaces.Box(low=0, high=999999, shape=(2,), dtype=np.int)
+        self.observation_space = gym.spaces.Box(low=0, high=999999, shape=(2,), dtype=int)
 
         self.timestep = 0
         self.seed()
@@ -65,7 +65,7 @@ class DiscreteStrategyBinomial(gym.Env):
 class DiscreteStrategyBinomialAgent(Protocol):
     """Protocol that agents applied to this class of envs should conform to."""
 
-    def act(self, previous_observation: np.array) -> Tuple[int, dict]:
+    def act(self, previous_observation: np.ndarray) -> Tuple[int, dict]:
         """Choose an action given the previous observation.
 
         Args:
@@ -83,7 +83,9 @@ class DiscreteStrategyBinomialAgent(Protocol):
 
 
 def matching_sin7_interaction(
-    strat: int, timestep: int, behaviour_params: Dict[int, Tuple[float, float]],
+    strat: int,
+    timestep: int,
+    behaviour_params: Dict[int, Tuple[float, float]],
 ) -> Tuple[float, float]:
     """A weekly periodicity behaviour.."""
     day_of_week = timestep % 7
@@ -107,7 +109,9 @@ for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
 
 
 def non_stationary_trend_interaction(
-    strat: int, timestep: int, behaviour_params: Dict[int, Tuple[float, float]],
+    strat: int,
+    timestep: int,
+    behaviour_params: Dict[int, Tuple[float, float]],
 ) -> Tuple[float, float]:
     """A linear increasing up to limit trend behaviour."""
     modifier = 0.5 + min(timestep * 0.01, 1)

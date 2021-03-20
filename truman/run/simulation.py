@@ -1,13 +1,13 @@
 """Core loop to run a single agent on a single environment."""
 from typing import Tuple
+from truman.typing import Agent
 
 import time
 
-from gym import Env
 import pandas as pd
+from gym import Env
 
 from truman import history as history_module
-from truman.typing import Agent
 
 
 def run(agent: Agent, env: Env, run_params: dict) -> Tuple[pd.DataFrame, float]:

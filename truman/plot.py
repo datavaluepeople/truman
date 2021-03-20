@@ -1,8 +1,9 @@
 """Plotting env histories."""
-from typing import List, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, List, Union
 from typing_extensions import Literal
 
 import logging
+
 
 if TYPE_CHECKING:
     from truman import history

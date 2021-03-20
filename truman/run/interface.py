@@ -1,11 +1,11 @@
 """Interface for running an agent on an env suites."""
-from typing import List, Callable
+from typing import Callable, List
+from truman.typing import Agent
 
 from gym import Env
 from gym.envs.registration import EnvRegistry
 
 from truman.run import simulation, store
-from truman.typing import Agent
 
 
 DEFAULT_PARAMS = {
