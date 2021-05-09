@@ -11,15 +11,16 @@ def test_missing_params():
 
 
 class FakeRegistry:
-    def __init__(self, num_envs):
-        self.num_envs = num_envs
+    def __init__(self, ids):
+        self.ids = ids
 
     def all(self):
-        return [mock.Mock() for _ in range(self.num_envs)]
-
-
-def fake_agent_factory(_):
-    return "fake"
+        envs = []
+        for id_ in self.ids:
+            env = mock.Mock()
+            env.id = id_
+            envs.append(env)
+        return envs
 
 
 def test_run(mocker):
@@ -27,13 +28,14 @@ def test_run(mocker):
     patched_simulation = mocker.patch.object(interface, "simulation")
     patched_simulation.run.return_value = (None, None)
 
-    suites = [FakeRegistry(4)]
+    env_suites = [FakeRegistry(["env_1", "env_2", "env_3", "env_4"])]
+    agent_suite = FakeRegistry(["agent_1", "agent_2"])
 
-    interface.run(fake_agent_factory, suites, run_params={"output_directory": "test"})
+    interface.run(agent_suite, env_suites, run_params={"output_directory": "test"})
 
-    assert patched_simulation.run.call_count == 4
-    assert patched_store.summarise.call_count == 4
-    assert patched_store.write.call_count == 4
+    assert patched_simulation.run.call_count == 8
+    assert patched_store.summarise.call_count == 8
+    assert patched_store.write.call_count == 8
 
     # Check that the default params were filled in correctly
     filled_params = patched_simulation.run.call_args_list[0][0][-1]
