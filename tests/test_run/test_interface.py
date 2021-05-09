@@ -40,3 +40,11 @@ def test_run(mocker):
     # Check that the default params were filled in correctly
     filled_params = patched_simulation.run.call_args_list[0][0][-1]
     assert "max_iters" in filled_params
+
+
+def test_run_clashing_ids():
+    env_suites = [FakeRegistry(["env_1"]), FakeRegistry(["env_1", "env_2"])]
+    agent_suite = FakeRegistry(["agent_1", "agent_2"])
+
+    with pytest.raises(AssertionError, match=r"Repeated environment ID"):
+        interface.run(agent_suite, env_suites, run_params={"output_directory": "test"})

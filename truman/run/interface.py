@@ -30,6 +30,7 @@ def run(agent_suite: AgentRegistry, env_suites: List[EnvRegistry], run_params: d
           - max_iters: int maximum iterations to run on an environment, default 100_000
     """
     params = _parse_params(run_params)
+    _check_no_clashing_ids(env_suites)
     for env_suite in env_suites:
         for env_spec in env_suite.all():
             for agent_spec in agent_suite.all():
@@ -53,3 +54,11 @@ def _parse_params(run_params: dict) -> dict:
     parsed = DEFAULT_PARAMS.copy()
     parsed.update(run_params)
     return parsed
+
+
+def _check_no_clashing_ids(env_suites: List[EnvRegistry]):
+    ids = []
+    for env_suite in env_suites:
+        ids += [spec.id for spec in env_suite.all()]
+
+    assert len(set(ids)) == len(ids), "Repeated environment ID in env suites"
