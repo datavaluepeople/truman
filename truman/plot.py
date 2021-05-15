@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 try:
     import matplotlib.pyplot as plt
 except ImportError:
+    plt = None
     logging.info("Importing matplotlib failed. Plotting will not work.")
 
 
