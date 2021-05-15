@@ -38,7 +38,10 @@ def plot(
     ax1.set_xlabel("step")
     ax1.set_yticks([])
 
-    use_cols = df.drop("done", axis=1).columns if use_cols == "all" else use_cols
+    if use_cols == "all":
+        use_cols = df.drop("done", axis=1).columns
+    else:
+        use_cols = list(set(use_cols).intersection(set(df.columns)))
 
     for i, column in enumerate(use_cols):
         ax = ax1.twinx()
