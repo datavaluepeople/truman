@@ -20,10 +20,12 @@ class DiscreteStrategyBinomial(gym.Env):
     def __init__(
         self,
         cohort_size: int,
+        episode_length: int,
         strategy_keys: List[str],
         behaviour_func: Callable[[int, int], Tuple[float, float]],
     ):
         self.cohort_size = cohort_size
+        self.episode_length = episode_length
         self.strategies = {strategy_key: i for i, strategy_key in enumerate(strategy_keys)}
         self.behaviour_func = behaviour_func
 
@@ -35,6 +37,9 @@ class DiscreteStrategyBinomial(gym.Env):
 
     def step(self, selected_strategy: int) -> StepReturn:
         """Select strategy (cohort of bandits) and receive response."""
+        if self.timestep >= self.episode_length:
+            raise gym.error.ResetNeeded("Environment needs resetting before use.")
+
         assert self.action_space.contains(selected_strategy)
 
         interaction_prb, conversion_prb = self.behaviour_func(selected_strategy, self.timestep)
@@ -45,10 +50,11 @@ class DiscreteStrategyBinomial(gym.Env):
 
         observation = np.array([num_interactions, num_conversions])
         reward = float(num_conversions)
+        done = self.timestep >= self.episode_length
         return (
             observation,
             reward,
-            False,
+            done,
             {"interaction_prb": interaction_prb, "conversion_prb": conversion_prb},
         )
 
@@ -99,6 +105,7 @@ for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
         entry_point="truman.time_period_step:DiscreteStrategyBinomial",
         kwargs={
             "cohort_size": 10000,
+            "episode_length": 365,
             "strategy_keys": ["a", "b"],
             "behaviour_func": functools.partial(
                 matching_sin7_interaction,
@@ -114,7 +121,7 @@ def non_stationary_trend_interaction(
     behaviour_params: Dict[int, Tuple[float, float]],
 ) -> Tuple[float, float]:
     """A linear increasing up to limit trend behaviour."""
-    modifier = 0.5 + min(timestep * 0.01, 1)
+    modifier = 0.5 + min(timestep * 0.0025, 1)
     return tuple([x * modifier for x in behaviour_params[strat]])  # type: ignore
 
 
@@ -124,6 +131,7 @@ for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
         entry_point="truman.time_period_step:DiscreteStrategyBinomial",
         kwargs={
             "cohort_size": 10000,
+            "episode_length": 365,
             "strategy_keys": ["a", "b"],
             "behaviour_func": functools.partial(
                 non_stationary_trend_interaction,

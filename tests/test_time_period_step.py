@@ -1,3 +1,6 @@
+import pytest
+from gym.error import ResetNeeded
+
 from truman import time_period_step
 
 
@@ -13,7 +16,10 @@ def test_discrete_strategy_binomial():
             return 1.0, 1.0
 
     env = time_period_step.DiscreteStrategyBinomial(
-        10, ["never_never", "never_always", "always_never", "always_always"], always_never_params
+        cohort_size=10,
+        episode_length=5,
+        strategy_keys=["never_never", "never_always", "always_never", "always_always"],
+        behaviour_func=always_never_params,
     )
 
     obvs, reward, done, info = env.step(0)
@@ -36,6 +42,28 @@ def test_discrete_strategy_binomial():
     assert reward == 10
     assert info["interaction_prb"] == 1.0
     assert info["conversion_prb"] == 1.0
+
+
+def test_discrete_strategy_binomial_correct_episode_length():
+    env = time_period_step.DiscreteStrategyBinomial(
+        cohort_size=0,
+        episode_length=3,
+        strategy_keys=["dummy"],
+        behaviour_func=lambda strat, timestep: (1, 1),
+    )
+
+    env.step(0)
+    env.step(0)
+    env.step(0)
+    with pytest.raises(ResetNeeded):
+        env.step(0)
+
+    env.reset()
+    env.step(0)
+    env.step(0)
+    env.step(0)
+    with pytest.raises(ResetNeeded):
+        env.step(0)
 
 
 def test_matching_sin7_interaction():
