@@ -7,5 +7,5 @@ setup(
     version="0.0.a",
     description="Simulating customer interactions with products and bid auctions at large scale.",
     author="datavaluepeople",
-    license="",
+    license="MIT",
 )
