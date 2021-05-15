@@ -2,7 +2,8 @@ import pathlib
 
 from setuptools import find_packages, setup
 
-VERSION = "0.0.1-alpha.1"
+import versioneer
+
 
 REPO_ROOT = pathlib.Path(__file__).parent
 
@@ -18,7 +19,7 @@ REQUIREMENTS = [
 
 setup(
     name="truman",
-    version=VERSION,
+    version=versioneer.get_version(),
     description="Simulating customer interactions with products and bid auctions at large scale.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -28,4 +29,5 @@ setup(
     packages=find_packages(),
     install_requires=REQUIREMENTS,
     python_requires=">=3.7",
+    cmdclass=versioneer.get_cmdclass(),
 )
