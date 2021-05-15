@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 
+from truman.errors import StoppedEarly
 from truman.run import simulation
 
 
@@ -33,3 +34,11 @@ def test_run(num_steps, mocker):
 
     assert elapsed == 2
     assert len(history) == num_steps + 1
+
+
+def test_run_raises_hits_max_iters():
+    env = FakeEnv(10)
+    agent = FakeAgent()
+
+    with pytest.raises(StoppedEarly):
+        simulation.run(agent=agent, env=env, run_params={"max_iters": 9})

@@ -7,6 +7,7 @@ import time
 import pandas as pd
 from gym import Env
 
+from truman import errors
 from truman import history as history_module
 
 
@@ -28,7 +29,7 @@ def run(agent: Agent, env: Env, run_params: dict) -> Tuple[pd.DataFrame, float]:
         obs, reward, done, env_info = env.step(action)
         history.append(action, obs, reward, done, env_info, agent_info)
         if done:
-            break
+            elapsed_secs = time.time() - start_time
+            return history.to_df(), elapsed_secs
 
-    elapsed_secs = time.time() - start_time
-    return history.to_df(), elapsed_secs
+    raise errors.StoppedEarly("Environment did not finish within max iterations.")
