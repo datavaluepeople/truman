@@ -1,12 +1,11 @@
 """Plotting env histories."""
-from typing import TYPE_CHECKING, List, Union
+from typing import List, Union
 from typing_extensions import Literal
 
 import logging
 
+import pandas as pd
 
-if TYPE_CHECKING:
-    from truman import history
 
 logger = logging.getLogger(__name__)
 
@@ -17,12 +16,12 @@ except ImportError:
 
 
 def plot(
-    history: "history.History",
+    df: pd.DataFrame,
     alpha: float = 0.7,
     use_cols: Union[List[str], Literal["all"]] = "all",
     ax=None,
 ):
-    """Plot the history of an environment.
+    """Plot the history of an environment from its history dataframe.
 
     Plot a scatter plot for the actions, and line plots for each other 1D series (the rewards,
     each component of the observations, any data included in the environment info).
@@ -39,7 +38,6 @@ def plot(
     ax1.set_xlabel("step")
     ax1.set_yticks([])
 
-    df = history.to_df()
     use_cols = df.drop("done", axis=1).columns if use_cols == "all" else use_cols
 
     for i, column in enumerate(use_cols):

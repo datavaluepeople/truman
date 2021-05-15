@@ -59,4 +59,5 @@ class History:
         ax=None,
     ):
         """Plot history."""
-        plot.plot(self, alpha=alpha, use_cols=use_cols, ax=ax)
+        df = self.to_df()
+        plot.plot(df, alpha=alpha, use_cols=use_cols, ax=ax)
