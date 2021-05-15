@@ -25,3 +25,10 @@ test:
 format:
 	isort .
 	black .
+
+package:
+	python setup.py sdist
+	python setup.py bdist_wheel
+
+release: package
+	twine upload dist/*
