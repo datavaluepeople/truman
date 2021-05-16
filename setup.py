@@ -20,7 +20,7 @@ REQUIREMENTS = [
 setup(
     name="truman",
     version=versioneer.get_version(),
-    description="Simulating customer interactions with products and bid auctions at large scale.",
+    description="Dynamic complex-system simulations for one-shot optimal decision-making agents",
     long_description=README,
     long_description_content_type="text/markdown",
     author="datavaluepeople",
