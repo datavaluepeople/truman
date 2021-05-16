@@ -1,4 +1,4 @@
-![PyPI version](https://img.shields.io/pypi/v/truman.svg)
+[![PyPI version](https://img.shields.io/pypi/v/truman.svg)](https://pypi.org/project/truman/)
 ![lint-test status](https://github.com/datavaluepeople/truman/actions/workflows/lint-test.yml/badge.svg?branch=master)
 [![codecov](https://codecov.io/gh/datavaluepeople/truman/branch/master/graph/badge.svg?token=3W8T5OSRZZ)](https://codecov.io/gh/datavaluepeople/truman)
 
