@@ -3,8 +3,8 @@ name: Release
 on:
   push:
     # Release from tags (which are created from GitHub releases too)
-    tags:  
-      - '/[0-9]+(\.[0-9]+)*(-alpha\.[0-9]+)?/'
+    tags:
+      - '/v[0-9]+(\.[0-9]+)*(-alpha\.[0-9]+)?/'
 
 jobs:
   build:
