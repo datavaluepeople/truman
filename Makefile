@@ -6,10 +6,10 @@ install:
 	pip install -r requirements.dev.txt  -e .
 
 compile:
-	pip-compile requirements.in; pip-compile requirements.dev.in
+	pip-compile setup.py && pip-compile requirements.dev.in
 
 upgrade:
-	pip-compile --upgrade requirements.in; pip-compile --upgrade requirements.dev.in
+	pip-compile --upgrade setup.py && pip-compile --upgrade requirements.dev.in
 
 lint:
 	flake8 .
@@ -25,3 +25,10 @@ test:
 format:
 	isort .
 	black .
+
+package:
+	python setup.py sdist
+	python setup.py bdist_wheel
+
+release: package
+	twine upload dist/*
