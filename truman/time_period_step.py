@@ -88,12 +88,37 @@ class DiscreteStrategyBinomialAgent(Protocol):
 # ----------------------------------------
 
 
+def static_interaction(
+    strat: int,
+    timestep: int,
+    behaviour_params: Dict[int, Tuple[float, float]],
+) -> Tuple[float, float]:
+    """Static behaviour."""
+    return behaviour_params[strat]
+
+
+for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
+    registry.register(
+        id=f"TimePeriodStep:Static:conv_1:{strat_1_conv}:conv_2:{strat_2_conv}-v0",
+        entry_point="truman.time_period_step:DiscreteStrategyBinomial",
+        kwargs={
+            "cohort_size": 10000,
+            "episode_length": 365,
+            "strategy_keys": ["a", "b"],
+            "behaviour_func": functools.partial(
+                static_interaction,
+                behaviour_params={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
+            ),
+        },
+    )
+
+
 def matching_sin7_interaction(
     strat: int,
     timestep: int,
     behaviour_params: Dict[int, Tuple[float, float]],
 ) -> Tuple[float, float]:
-    """A weekly periodicity behaviour.."""
+    """A weekly periodicity behaviour."""
     day_of_week = timestep % 7
     modifier = math.sin((day_of_week / 7) * 2 * math.pi) + 1
     return tuple([x * modifier for x in behaviour_params[strat]])  # type: ignore
