@@ -18,7 +18,6 @@ lint:
 	black --check .
 	mypy truman
 
-
 test:
 	pytest tests
 
