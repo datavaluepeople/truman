@@ -47,6 +47,6 @@ jobs:
     - name: Release package
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: {{ secrets.TWINE_API_TOKEN }}
+        TWINE_PASSWORD: ${{ secrets.TWINE_API_TOKEN }}
       run: |
         make release
