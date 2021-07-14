@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then make install; fi
+        make install
     - name: Lint with flake8
       run: |
         make lint

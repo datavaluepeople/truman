@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then make install; fi
+        make install
     - name: Lint with flake8
       run: |
         make lint
@@ -43,7 +43,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then make install; fi
+        make install
     - name: Release package
       env:
         TWINE_USERNAME: __token__
