@@ -4,7 +4,7 @@ on:
   push:
     # Release from tags (which are created from GitHub releases too)
     tags:
-      - '/v[0-9]+(\.[0-9]+)*(-alpha\.[0-9]+)?/'
+      - "v[0-9]+.[0-9]+.[0-9]+*"
 
 jobs:
   lint-test:
