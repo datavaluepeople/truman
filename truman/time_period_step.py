@@ -164,3 +164,33 @@ for strat_1_conv, strat_2_conv in [(0.2, 0.3), (0.02, 0.03), (0.002, 0.003)]:
             ),
         },
     )
+
+
+def swapping_trend_interaction(
+    strat: int,
+    timestep: int,
+    behaviour_params: Dict[int, Tuple[float, float]],
+) -> Tuple[float, float]:
+    """A trend causing one strategy to rise in conversion while the other decreases."""
+    # One strategy is increasing in conversion over time, whereas the other is decreasing
+    if strat == 0:
+        modifier = 0.5 + min(timestep * 0.0025, 1)
+    if strat == 1:
+        modifier = 1 - min(timestep * 0.0025, 0.5)
+    return tuple([x * modifier for x in behaviour_params[strat]])  # type: ignore
+
+
+for strat_1_conv, strat_2_conv in [(0.2, 0.2), (0.02, 0.02), (0.002, 0.002)]:
+    registry.register(
+        id=f"TimePeriodStep:SwappingTrend:conv_1:{strat_1_conv}:conv_2:{strat_2_conv}-v0",
+        entry_point="truman.time_period_step:DiscreteStrategyBinomial",
+        kwargs={
+            "cohort_size": 10000,
+            "episode_length": 365,
+            "strategy_keys": ["a", "b"],
+            "behaviour_func": functools.partial(
+                swapping_trend_interaction,
+                behaviour_params={0: (0.5, strat_1_conv), 1: (0.5, strat_2_conv)},
+            ),
+        },
+    )

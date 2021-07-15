@@ -72,3 +72,21 @@ def test_matching_sin7_interaction():
         modifiers = time_period_step.matching_sin7_interaction(0, i, behaviour_params)
         assert 0 <= modifiers[0] <= 2
         assert 0 <= modifiers[1] <= 2
+
+
+def test_swapping_trend_interaction():
+    behaviour_params = {0: (0.5, 0.2), 1: (0.5, 0.2)}
+
+    # At first, strat_1 > strat_0
+    timestep = 1
+    strat_0 = time_period_step.swapping_trend_interaction(0, timestep, behaviour_params)
+    strat_1 = time_period_step.swapping_trend_interaction(1, timestep, behaviour_params)
+    for modifier_strat_0, modifier_strat_1 in zip(strat_0, strat_1):
+        assert modifier_strat_1 >= modifier_strat_0 * 1.9
+
+    # but by the end, it's swapped
+    timestep = 365
+    strat_0 = time_period_step.swapping_trend_interaction(0, timestep, behaviour_params)
+    strat_1 = time_period_step.swapping_trend_interaction(1, timestep, behaviour_params)
+    for modifier_strat_0, modifier_strat_1 in zip(strat_0, strat_1):
+        assert modifier_strat_0 >= modifier_strat_1 * 1.9
