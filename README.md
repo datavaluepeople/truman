@@ -28,7 +28,7 @@ reinforcement learning algorithms for making a massive number of optimal
 decisions simultaneously on high noise and changing environments, e.g. pricing
 100,000s of travel products daily, or health intervention decisions for
 1,000,000s of humans daily.  In such environments, agents should be able to
-learn quickly and adapt to novel behaviours, since the price of testing
+learn quickly and adapt to novel behaviours, since the cost of testing
 algorithms is very high.
 
 Thus the suites of environments in truman are directed towards the goal of
