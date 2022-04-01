@@ -16,6 +16,25 @@ aims to be an effective way to _develop and validate one-shot optimal
 decision-making agents_ that perform well on unique systems that can’t be
 reliably simulated and that have a high cost of experimentation.
 
+## Background
+
+The base framework that environments are built upon is OpenAI’s
+[Gym](https://github.com/openai/gym).  Gym is a powerful framework for building
+environments and developing reinforcement learning algorithms - but Gym's
+environments are mostly directed towards _training_ agents on problems that can
+be simulated exactly, e.g. playing an Atari game.  Our work at
+[datavaluepeople](https://datavaluepeople.com/) is often developing
+reinforcement learning algorithms for making a massive number of optimal
+decisions simultaneously on high noise and changing environments, e.g. pricing
+100,000s of travel products daily, or health intervention decisions for
+1,000,000s of humans daily.  In such environments, agents should be able to
+learn quickly and adapt to novel behaviours, since the cost of testing
+algorithms is very high.
+
+Thus the suites of environments in truman are directed towards the goal of
+_large scale optimised decision making on complex systems_, and only allow
+agents a single episode to both learn and optimize on simultaneously.
+
 ## Main Features
 
 - Environments that are compatible (built on) OpenAI's
@@ -46,25 +65,6 @@ git clone https://github.com/datavaluepeople/truman
 cd truman
 pip install -e .
 ```
-
-## Background: Why truman?
-
-The base framework that environments are built upon is OpenAI’s
-[Gym](https://github.com/openai/gym).  Gym is a powerful framework for building
-environments and developing reinforcement learning algorithms - but Gym's
-environments are mostly directed towards _training_ agents on problems that can
-be simulated exactly, e.g. playing an Atari game.  Our work at
-[datavaluepeople](https://datavaluepeople.com/) is often developing
-reinforcement learning algorithms for making a massive number of optimal
-decisions simultaneously on high noise and changing environments, e.g. pricing
-100,000s of travel products daily, or health intervention decisions for
-1,000,000s of humans daily.  In such environments, agents should be able to
-learn quickly and adapt to novel behaviours, since the price of testing
-algorithms is very high.
-
-Thus the suites of environments in truman are directed towards the goal of
-_large scale optimised decision making on complex systems_, and only allow
-agents a single episode to both learn and optimize on simultaneously.
 
 ## License
 
